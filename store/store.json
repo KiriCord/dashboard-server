@@ -1,0 +1,38 @@
+{
+    "category": "Разработка",
+    "name": "Локальный веб-сервер",
+    "version": "0.0.1",
+    "icon": "icons/icon.png",
+    "smallicon": "icons/icon_small.png",
+    "exe": "sources/__main__.py",
+    "params": "",
+    "hidden": false,
+    "toolbar": true,
+    "wellpopup": true,
+    "elemmask": "",
+    "minselwells": -1,
+    "author": "Разработчики ГРАД",
+    "descr": "Локальный веб-сервер для оповещения изменений в навигторе",
+    "order": 200,
+    "encoding": "utf-8",
+    "pdmc": "project",
+    "depends": [
+        "CommonPythonModules",
+        "LatestPythonGradAPI"
+    ],
+    "req": [
+        {
+            "name": "PySide2",
+            "version": "5.13.1"
+        },
+        {
+            "name": "grad-api"
+        },
+        {
+            "name": "websockets"
+        },
+        {
+            "name": "socketio"
+        }
+    ]
+}
