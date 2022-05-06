@@ -42,7 +42,7 @@ async def read_mer(well_id:str, begin_date: GradDate, end_date: GradDate):
 
 @app.get("/mer/{well_id}")
 async def read_mer(well_id):
-    return con.select(parse_select(f'select oil, gas, dt from mer where well="{well_id}" fetch field="Овальное"'))
+    return con.select(parse_select(f'select oil, gas, dt from mer where well="{well_id}" order by dt fetch field="Овальное"'))
 
 
 wells = [data.well for data in con.select(parse_select('select well from wells fetch field="Овальное"'))]
