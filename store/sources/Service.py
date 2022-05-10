@@ -34,18 +34,35 @@ class GradDate(BaseModel):
     def toGradDateStr(self):
         return f"{self.year},{self.month}"
 
+#------для любых таблиц
+@app.post("/{table}/{well_id}")
+async def read_universal(table, well_id:str, begin_date: GradDate, end_date: GradDate):
+    return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
+
+
+@app.get("/{table}/{well_id}")
+async def read_universal(table, well_id):
+    return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt fetch field="Овальное"'))
+#----------------------
+
 
 @app.post("/mer/{well_id}")
 async def read_mer(well_id:str, begin_date: GradDate, end_date: GradDate):
-    return con.select(parse_select(f'select oil, gas, dt from mer where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
+    return con.select(parse_select(f'select dt, charwork, gas, liq, oil, priem from mer where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
 
 
 @app.get("/mer/{well_id}")
 async def read_mer(well_id):
-    return con.select(parse_select(f'select oil, gas, dt from mer where well="{well_id}" order by dt fetch field="Овальное"'))
+    return con.select(parse_select(f'select dt, charwork, gas, liq, oil, priem from mer where well="{well_id}" order by dt fetch field="Овальное"'))
+
+
+@app.get("/mersumcum/{well_id}")
+async def read_mersumcum(well_id):
+    return con.select(parse_select(f'select ql, qn, zak from mersumcum where well="{well_id}" order by dt fetch field="Овальное"'))
 
 
 wells = [data.well for data in con.select(parse_select('select well from wells fetch field="Овальное"'))]
+#wells = ["999_2550"];
 
 
 @app.get("/events")
@@ -54,7 +71,7 @@ async def test(request: Request):
         try:
             while True:
                  yield dict(data=random.choice(wells))
-                 await asyncio.sleep(5)
+                 await asyncio.sleep(10)
         except asyncio.CancelledError as e:
             print(f"Disconnected from client (via refresh/close) {request.client}")
             raise e
