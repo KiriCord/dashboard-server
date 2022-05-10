@@ -35,14 +35,14 @@ class GradDate(BaseModel):
         return f"{self.year},{self.month}"
 
 #------для любых таблиц
-@app.post("/{table}/{well_id}")
-async def read_universal(table, well_id:str, begin_date: GradDate, end_date: GradDate):
-    return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
-
-
-@app.get("/{table}/{well_id}")
-async def read_universal(table, well_id):
-    return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt fetch field="Овальное"'))
+# @app.post("/{table}/{well_id}")
+# async def read_universal(table, well_id:str, begin_date: GradDate, end_date: GradDate):
+#     return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
+#
+#
+# @app.get("/{table}/{well_id}")
+# async def read_universal(table, well_id):
+#     return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt fetch field="Овальное"'))
 #----------------------
 
 
