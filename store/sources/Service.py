@@ -65,6 +65,10 @@ async def read_mersumcum(well_id):
 async def read_mersumcum(well_id):
     return con.select(parse_select(f'select factpriem from trinj where well="{well_id}" order by dt fetch field="Овальное"'))
 
+@app.get("/dictelems/{field}")
+async def read_dictelems(field):
+    return con.select(f"from: dictelems, fields: *, \"base\": {{field: {field}}}, where: {{\"ois\": [\"XR\"]}}")
+
 
 wells = [data.well for data in con.select(parse_select('select well from wells fetch field="Овальное"'))]
 #wells = ["999_2550"];
@@ -76,7 +80,7 @@ async def test(request: Request):
         try:
             while True:
                  yield dict(data=random.choice(wells))
-                 await asyncio.sleep(3)
+                 await asyncio.sleep(6)
         except asyncio.CancelledError as e:
             print(f"Disconnected from client (via refresh/close) {request.client}")
             raise e
