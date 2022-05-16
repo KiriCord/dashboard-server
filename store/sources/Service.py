@@ -34,7 +34,7 @@ class GradDate(BaseModel):
     def toGradDateStr(self):
         return f"{self.year},{self.month}"
 
-#------для любых таблиц
+# #------для любых таблиц
 # @app.post("/{table}/{well_id}")
 # async def read_universal(table, well_id:str, begin_date: GradDate, end_date: GradDate):
 #     return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
@@ -43,7 +43,7 @@ class GradDate(BaseModel):
 # @app.get("/{table}/{well_id}")
 # async def read_universal(table, well_id):
 #     return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt fetch field="Овальное"'))
-#----------------------
+# #----------------------
 
 
 @app.post("/mer/{well_id}")
@@ -62,8 +62,18 @@ async def read_mersumcum(well_id):
 
 
 @app.get("/trinj/{well_id}")
-async def read_mersumcum(well_id):
+async def read_trinj(well_id):
     return con.select(parse_select(f'select factpriem from trinj where well="{well_id}" order by dt fetch field="Овальное"'))
+
+@app.get("/troil/{well_id}")
+async def read_troil(well_id):
+    return con.select(parse_select(f'select qliquid, qnefti, obvodnen from troil where well="{well_id}" order by dt fetch field="Овальное"'))
+
+
+@app.get("/mercum/{well_id}")
+async def read_mercum(well_id):
+    return con.select(parse_select(f'select ql, qn, obvod from troil where well="{well_id}" order by dt fetch field="Овальное"'))
+
 
 @app.get("/dictelems/{field}")
 async def read_dictelems(field):
@@ -80,7 +90,7 @@ async def test(request: Request):
         try:
             while True:
                  yield dict(data=random.choice(wells))
-                 await asyncio.sleep(6)
+                 await asyncio.sleep(5)
         except asyncio.CancelledError as e:
             print(f"Disconnected from client (via refresh/close) {request.client}")
             raise e
