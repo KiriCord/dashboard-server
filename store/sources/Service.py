@@ -48,17 +48,17 @@ class GradDate(BaseModel):
 
 @app.post("/mer/{well_id}")
 async def read_mer(well_id:str, begin_date: GradDate, end_date: GradDate):
-    return con.select(parse_select(f'select dt, charwork, gas, liq, oil, priem from mer where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
+    return con.select(parse_select(f'select dt, charwork.name, gas, liq, oil, priem from mer where well="{well_id}" order by dt limit mmbegin=({begin_date.toGradDateStr()}) and mmend=({end_date.toGradDateStr()}) fetch field="Овальное"'))
 
 
 @app.get("/mer/{well_id}")
 async def read_mer(well_id):
-    return con.select(parse_select(f'select dt, charwork, gas, liq, oil, priem from mer where well="{well_id}" order by dt fetch field="Овальное"'))
+    return con.select(parse_select(f'select dt, charwork.name, gas, liq, oil, priem from mer where well="{well_id}" order by dt fetch field="Овальное"'))
 
 
 @app.get("/mersumcum/{well_id}")
 async def read_mersumcum(well_id):
-    return con.select(parse_select(f'select ql, qn, zak from mersumcum where well="{well_id}" order by dt fetch field="Овальное"'))
+    return con.select(parse_select(f'select liq, oil, zak from mersumcum where well="{well_id}" order by dt fetch field="Овальное"'))
 
 
 @app.get("/trinj/{well_id}")
@@ -80,8 +80,8 @@ async def read_dictelems(field):
     return con.select(f"from: dictelems, fields: *, \"base\": {{field: {field}}}, where: {{\"ois\": [\"XR\"]}}")
 
 
-wells = [data.well for data in con.select(parse_select('select well from wells fetch field="Овальное"'))]
-#wells = ["999_2550"];
+#wells = [data.well for data in con.select(parse_select('select well from wells fetch field="Овальное"'))]
+wells = ["999_2550"];
 
 
 @app.get("/events")
@@ -90,7 +90,7 @@ async def test(request: Request):
         try:
             while True:
                  yield dict(data=random.choice(wells))
-                 await asyncio.sleep(5)
+                 await asyncio.sleep(10)
         except asyncio.CancelledError as e:
             print(f"Disconnected from client (via refresh/close) {request.client}")
             raise e
@@ -108,5 +108,9 @@ def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
 
-if __name__ == "__main__":
+def main():
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
+
+if __name__ == "__main__":
+    main()
