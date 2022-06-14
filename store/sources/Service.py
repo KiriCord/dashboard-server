@@ -45,6 +45,7 @@ class GradDate(BaseModel):
 #     return con.select(parse_select(f'select * from {table} where well="{well_id}" order by dt fetch field="Овальное"'))
 # #----------------------
 
+print(parse_select(f'select dt, charwork.name, gas, liq, oil, priem from mer where well="999_2550" order by dt fetch field="Овальное"'))
 
 @app.post("/mer/{well_id}")
 async def read_mer(well_id:str, begin_date: GradDate, end_date: GradDate):
@@ -82,6 +83,7 @@ async def read_dictelems(field):
 
 #wells = [data.well for data in con.select(parse_select('select well from wells fetch field="Овальное"'))]
 wells = ["999_2550"];
+#wells = ["999_1830"]
 
 
 @app.get("/events")
@@ -90,7 +92,7 @@ async def test(request: Request):
         try:
             while True:
                  yield dict(data=random.choice(wells))
-                 await asyncio.sleep(10)
+                 await asyncio.sleep(30)
         except asyncio.CancelledError as e:
             print(f"Disconnected from client (via refresh/close) {request.client}")
             raise e
